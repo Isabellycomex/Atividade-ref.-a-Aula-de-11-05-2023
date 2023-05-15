@@ -1,0 +1,123 @@
+#include <iostream>
+using namespace std;
+
+
+struct Node {
+    int value;
+    Node* next;
+};
+
+class LinkedListStack {
+private:
+    Node* top;
+
+public:
+    LinkedListStack() {
+        top = nullptr;
+    }
+
+    void push(int value) {
+        Node* new_node = new Node;
+        new_node->value = value;
+        new_node->next = top;
+        top = new_node;
+    }
+
+    int pop() {
+        if (is_empty())
+            return -1;
+
+        int value = top->value;
+        Node* temp = top;
+        top = top->next;
+        delete temp;
+        return value;
+    }
+
+    bool is_empty() {
+        return top == nullptr;
+    }
+};
+
+
+class ArrayStack {
+private:
+    int* stack;
+    int top;
+    int capacity;
+
+public:
+    ArrayStack(int size) {
+        stack = new int[size];
+        top = -1;
+        capacity = size;
+    }
+
+    ~ArrayStack() {
+        delete[] stack;
+    }
+
+    void push(int value) {
+        stack[++top] = value;
+    }
+
+    int pop() {
+        if (is_empty())
+            return -1;
+
+        return stack[top--];
+    }
+
+    bool is_empty() {
+        return top == -1;
+    }
+};
+
+int main() {
+    LinkedListStack lista_encadeada_par;
+    LinkedListStack lista_encadeada_impar;
+    ArrayStack vetor_par(30);
+    ArrayStack vetor_impar(30);
+
+    int anterior = -1;
+    for (int i = 0; i < 30; i++) {
+        int numero;
+        cout << "Digite um número inteiro: ";
+        cin >> numero;
+
+        if (anterior != -1 && numero <= anterior) {
+            cout << "O número digitado deve ser maior que o anterior." << endl;
+            i--;
+            continue;
+        }
+
+        if (numero % 2 == 0) {
+            lista_encadeada_par.push(numero);
+            vetor_par.push(numero);
+        }
+        else {
+            lista_encadeada_impar.push(numero);
+            vetor_impar.push(numero);
+        }
+
+        anterior = numero;
+    }
+
+  
+    cout << "Pilha em lista encadeada (números pares):" << endl;
+    while (!lista_encadeada_par.is_empty()) {
+        cout << lista_encadeada_par.pop() << endl;
+    }
+
+    cout << "Pilha em lista encadeada (números ímpares):" << endl;
+    while (!lista_encadeada_impar.is_empty()) {
+        cout << lista_encadeada_impar.pop() << endl;
+    }
+
+    cout << "Pilha em vetor (números pares):" << endl;
+    while (!vetor_par.is_empty()) {
+        cout << vetor_par.pop() << endl;
+    }
+
+    return 0;
+}
